@@ -80,7 +80,7 @@ export default function UploadPage() {
   return (
     <div className="flex flex-col">
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-br from-pink-100 via-yellow-100 to-blue-100 flex items-center justify-center px-4 py-10">
+      <div className="min-h-screen bg-white flex items-center justify-center px-4 py-10">
         <div className="bg-white/80 backdrop-blur-sm shadow-2xl rounded-3xl p-10 w-full max-w-2xl border border-blue-200">
           <h1 className="text-3xl font-extrabold text-indigo-700 mb-8 text-center flex items-center justify-center gap-2">
             <UploadCloud className="w-8 h-8" />
@@ -104,14 +104,14 @@ export default function UploadPage() {
               type="text"
               value={title}
               placeholder="Enter a title for your image"
-              className="p-3 border border-purple-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all shadow-sm"
+              className="p-3 border border-purple-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all shadow-sm text-black"
               onChange={(e) => setTitle(e.target.value)}
             />
             <div className="relative">
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="appearance-none w-full p-3 pr-10 border border-pink-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all shadow-sm text-gray-700"
+                className="appearance-none w-full p-3 pr-10 border border-purple-500 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all shadow-sm text-gray-700"
               >
                 <option value="" disabled>
                   Select a category

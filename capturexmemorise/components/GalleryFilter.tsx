@@ -25,7 +25,7 @@ export function GalleryFilter({
       <select
         value={defaultCategory}
         onChange={(e) => handleChange("category", e.target.value)}
-        className="p-2 border border-gray-300 rounded-lg shadow-sm text-sm"
+        className="p-2 border border-gray-300 rounded-lg shadow-sm text-sm text-black"
       >
         {categories.map((cat) => (
           <option key={cat} value={cat}>
@@ -37,7 +37,7 @@ export function GalleryFilter({
       <select
         value={defaultSort}
         onChange={(e) => handleChange("sort", e.target.value)}
-        className="p-2 border border-gray-300 rounded-lg shadow-sm text-sm"
+        className="p-2 border border-gray-300 rounded-lg shadow-sm text-sm text-black"
       >
         <option value="latest">Newest First</option>
         <option value="oldest">Oldest First</option>

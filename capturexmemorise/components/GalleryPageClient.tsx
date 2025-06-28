@@ -109,9 +109,9 @@ export default function GalleryPageClient({
                 sizes="(max-width: 768px) 100vw, 60vw"
               />
             </div>
-            <h2 className="text-2xl font-bold">{selectedImage.title}</h2>
+            <h2 className="text-2xl font-bold text-black">{selectedImage.title}</h2>
             <p className="text-sm text-gray-600">By {selectedImage.username}</p>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-600">
               {new Date(selectedImage.createdAt).toLocaleString()}
             </p>
           </div>
