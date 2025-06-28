@@ -6,7 +6,7 @@ import ImageCard from "./ImageCard";
 import { GalleryFilter } from "./GalleryFilter";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
-import { X } from "lucide-react";
+import { X, Share2 } from "lucide-react";
 
 const categories = ["All", "Nature", "Travel", "Food", "Animals", "Tech"];
 
@@ -108,12 +108,68 @@ export default function GalleryPageClient({
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 60vw"
               />
+              <a
+                href={selectedImage.url.replace(
+                  "/upload/",
+                  `/upload/fl_attachment:${selectedImage.title.replace(
+                    /\s+/g,
+                    "_"
+                  )}/`
+                )}
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute bottom-4 left-4 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 text-sm rounded-lg shadow-md transition"
+              >
+                Download
+              </a>
+              <button
+                onClick={() =>
+                  navigator
+                    .share?.({
+                      title: selectedImage.title,
+                      text: `Check out this image: ${selectedImage.title}`,
+                      url: selectedImage.url,
+                    })
+                    .catch((err) => console.error("Share failed:", err))
+                }
+                className="absolute bottom-4 right-10 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded-lg shadow-md transition flex items-center gap-1"
+              >
+                <Share2 className="w-4 h-4" />
+                Share
+              </button>
             </div>
-            <h2 className="text-2xl font-bold text-black">{selectedImage.title}</h2>
-            <p className="text-sm text-gray-600">By {selectedImage.username}</p>
-            <p className="text-xs text-gray-600">
-              {new Date(selectedImage.createdAt).toLocaleString()}
-            </p>
+            <div className="mb-4">
+              <h2 className="text-2xl font-bold text-black mb-1">
+                {selectedImage.title}
+              </h2>
+              <p className="text-sm text-gray-600">
+                By {selectedImage.username}
+              </p>
+              <p className="text-xs text-gray-500 mb-2">
+                {new Date(selectedImage.createdAt).toLocaleString()}
+              </p>
+            </div>
+
+            <div className="border-t pt-4">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                Comments
+              </h3>
+              {selectedImage.comments.length > 0 ? (
+                <ul className="space-y-2 max-h-40 overflow-y-auto pr-2">
+                  {selectedImage.comments.map((comment) => (
+                    <li
+                      key={comment.id}
+                      className="text-sm text-gray-700 bg-gray-100 rounded-lg p-2"
+                    >
+                      {comment.content}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-gray-500">No comments yet.</p>
+              )}
+            </div>
           </div>
         </div>
       )}
