@@ -1,7 +1,11 @@
 "use client";
+
+import { useState } from "react";
 import ImageCard from "./ImageCard";
 import { GalleryFilter } from "./GalleryFilter";
 import Navbar from "@/components/Navbar";
+import Image from "next/image";
+import { X } from "lucide-react";
 
 const categories = ["All", "Nature", "Travel", "Food", "Animals", "Tech"];
 
@@ -25,6 +29,10 @@ export default function GalleryPageClient({
   selectedCategory: string;
   sortOrder: string;
 }) {
+  const [selectedImage, setSelectedImage] = useState<ImageWithMeta | null>(
+    null
+  );
+
   return (
     <div>
       <Navbar />
@@ -52,6 +60,7 @@ export default function GalleryPageClient({
                   likes: img.likes.length,
                   comments: img.comments.length,
                 }}
+                onClick={() => setSelectedImage(img)}
               />
             ))}
           </div>
@@ -61,6 +70,34 @@ export default function GalleryPageClient({
           </div>
         )}
       </div>
+
+      {/* Modal */}
+      {selectedImage && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-center items-center px-4">
+          <div className="relative bg-white rounded-xl p-4 max-w-3xl w-full shadow-lg">
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-2 right-2 text-gray-600 hover:text-red-500"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="relative w-full h-[400px] mb-4 rounded-md overflow-hidden">
+              <Image
+                src={selectedImage.url}
+                alt={selectedImage.title}
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 100vw, 60vw"
+              />
+            </div>
+            <h2 className="text-2xl font-bold">{selectedImage.title}</h2>
+            <p className="text-sm text-gray-600">By {selectedImage.username}</p>
+            <p className="text-xs text-gray-400">
+              {new Date(selectedImage.createdAt).toLocaleString()}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

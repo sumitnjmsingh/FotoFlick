@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 import {
@@ -24,7 +23,13 @@ interface Image {
   comments?: number;
 }
 
-export default function ImageCard({ image }: { image: Image }) {
+export default function ImageCard({
+  image,
+  onClick,
+}: {
+  image: Image;
+  onClick: () => void;
+}) {
   const [likes, setLikes] = useState(image.likes || 0);
   const [liked, setLiked] = useState(false);
   const [showCommentBox, setShowCommentBox] = useState(false);
@@ -82,7 +87,7 @@ export default function ImageCard({ image }: { image: Image }) {
 
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden transition-transform duration-200 hover:scale-[1.02] hover:shadow-2xl border border-gray-100">
-      <Link href={`/image/${image.id}`} className="block group">
+      <div onClick={onClick} className="cursor-pointer group">
         <div className="relative w-full h-52 overflow-hidden">
           <Image
             src={image.url}
@@ -92,7 +97,7 @@ export default function ImageCard({ image }: { image: Image }) {
             sizes="(max-width: 768px) 100vw, 33vw"
           />
         </div>
-      </Link>
+      </div>
 
       <div className="p-4 space-y-2">
         <h2 className="text-xl font-semibold text-gray-800 leading-tight line-clamp-2">
