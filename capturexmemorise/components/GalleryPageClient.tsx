@@ -34,7 +34,7 @@ export default function GalleryPageClient({
   );
 
   return (
-    <div>
+    <div className="bg-white min-h-screen">
       <Navbar />
       <div className="p-6 max-w-7xl mx-auto">
         <div className="flex items-center justify-between flex-wrap mb-6 gap-4">
