@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import ImageCard from "./ImageCard";
 import { GalleryFilter } from "./GalleryFilter";
 import Navbar from "@/components/Navbar";
@@ -22,16 +23,34 @@ interface ImageWithMeta {
 
 export default function GalleryPageClient({
   images,
-  selectedCategory,
-  sortOrder,
 }: {
   images: ImageWithMeta[];
-  selectedCategory: string;
-  sortOrder: string;
 }) {
+  const searchParams = useSearchParams();
+  const selectedCategory = searchParams.get("category") || "All";
+  const sortOrder = searchParams.get("sort") === "oldest" ? "asc" : "desc";
+
   const [selectedImage, setSelectedImage] = useState<ImageWithMeta | null>(
     null
   );
+
+  const filteredImages = useMemo(() => {
+    let result = [...images];
+
+    if (selectedCategory !== "All") {
+      result = result.filter(
+        (img) => img.category?.toLowerCase() === selectedCategory.toLowerCase()
+      );
+    }
+
+    result.sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+      return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+    });
+
+    return result;
+  }, [images, selectedCategory, sortOrder]);
 
   return (
     <div className="bg-white min-h-screen">
@@ -44,15 +63,15 @@ export default function GalleryPageClient({
             defaultSort={sortOrder === "asc" ? "oldest" : "latest"}
           />
           <p className="text-sm text-gray-600">
-            Showing <strong>{images.length}</strong> image
-            {images.length !== 1 && "s"}
+            Showing <strong>{filteredImages.length}</strong> image
+            {filteredImages.length !== 1 && "s"}
             {selectedCategory !== "All" && ` in “${selectedCategory}”`}
           </p>
         </div>
 
-        {images.length > 0 ? (
+        {filteredImages.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {images.map((img) => (
+            {filteredImages.map((img) => (
               <ImageCard
                 key={img.id}
                 image={{
@@ -77,16 +96,16 @@ export default function GalleryPageClient({
           <div className="relative bg-white rounded-xl p-4 max-w-3xl w-full shadow-lg">
             <button
               onClick={() => setSelectedImage(null)}
-              className="absolute top-2 right-2 text-gray-600 hover:text-red-500"
+              className="absolute bottom-14 right-4 text-gray-600 hover:text-red-500"
             >
-              <X className="w-6 h-6" />
+              <X className="w-6 h-6 hover:cursor-pointer" />
             </button>
             <div className="relative w-full h-[400px] mb-4 rounded-md overflow-hidden">
               <Image
                 src={selectedImage.url}
                 alt={selectedImage.title}
                 fill
-                className="object-contain"
+                className="object-cover"
                 sizes="(max-width: 768px) 100vw, 60vw"
               />
             </div>

@@ -1,4 +1,3 @@
-// components/GalleryFilter.tsx
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
@@ -24,7 +23,7 @@ export function GalleryFilter({
   return (
     <div className="flex gap-3 flex-wrap">
       <select
-        defaultValue={defaultCategory}
+        value={defaultCategory}
         onChange={(e) => handleChange("category", e.target.value)}
         className="p-2 border border-gray-300 rounded-lg shadow-sm text-sm"
       >
@@ -36,7 +35,7 @@ export function GalleryFilter({
       </select>
 
       <select
-        defaultValue={defaultSort}
+        value={defaultSort}
         onChange={(e) => handleChange("sort", e.target.value)}
         className="p-2 border border-gray-300 rounded-lg shadow-sm text-sm"
       >
