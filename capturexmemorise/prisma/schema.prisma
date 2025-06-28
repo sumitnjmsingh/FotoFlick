@@ -21,6 +21,7 @@ model Image {
   userId    String
   username  String
   createdAt DateTime @default(now())
+  locked    Boolean  @default(false)
 
   likes    Like[]
   comments Comment[]

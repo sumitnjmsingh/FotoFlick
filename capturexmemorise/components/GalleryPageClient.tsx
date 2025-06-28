@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import { useSearchParams } from "next/navigation";
 import ImageCard from "./ImageCard";
 import { GalleryFilter } from "./GalleryFilter";
@@ -8,15 +9,17 @@ import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import { X, Share2, LoaderCircle, CalendarDays } from "lucide-react";
 
-const categories = ["All", "Nature", "Travel", "Food", "Animals", "Tech"];
+const categories = ["All", "Nature", "Travel", "Food", "Animals", "Tech", "General"];
 
 interface ImageWithMeta {
   id: string;
   url: string;
   title: string;
+  userId: string;
   username: string;
   category?: string;
   createdAt: string | number | Date;
+  locked?: boolean;
   likes: { id: string; userId: string }[];
   comments: { id: string; content: string }[];
 }
@@ -31,6 +34,8 @@ export default function GalleryPageClient() {
   const [selectedImage, setSelectedImage] = useState<ImageWithMeta | null>(
     null
   );
+  const { user } = useUser();
+  const currentUserId = user?.id;
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -106,9 +111,20 @@ export default function GalleryPageClient() {
                 src={selectedImage.url}
                 alt={selectedImage.title}
                 fill
-                className="object-cover"
+                className={`object-cover ${
+                  selectedImage.locked && selectedImage.userId !== currentUserId
+                    ? "blur-sm"
+                    : ""
+                }`}
                 sizes="(max-width: 768px) 100vw, 60vw"
               />
+
+              {selectedImage.locked &&
+                selectedImage.userId !== currentUserId && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-lg font-semibold">
+                    🔒 Locked Image
+                  </div>
+                )}
               <button
                 onClick={() => setSelectedImage(null)}
                 className="absolute top-4 right-4 text-white hover:text-red-500"

@@ -7,6 +7,8 @@ import {
   User2,
   Heart,
   MessageCircle,
+  Lock,
+  Unlock,
 } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
@@ -16,8 +18,10 @@ interface Image {
   id: string;
   url: string;
   title: string;
+  userId: string;
   username: string;
   createdAt: string | number | Date;
+  locked?: boolean;
   likes?: number;
   comments?: number;
 }
@@ -35,6 +39,8 @@ export default function ImageCard({
   const [comment, setComment] = useState("");
   const [commentLoading, setCommentLoading] = useState(false);
   const { user } = useUser();
+  const [locked, setLocked] = useState(image.locked || false);
+  const isOwner = user?.id === image.userId;
 
   const handleLike = async () => {
     if (!user) {
@@ -54,6 +60,19 @@ export default function ImageCard({
       setLikes((prev) => (isLiked ? prev + 1 : prev - 1));
     } catch {
       toast.error("Failed to toggle like.");
+    }
+  };
+
+  const handleToggleLock = async () => {
+    try {
+      const res = await axios.post("/api/image/lock", {
+        imageId: image.id,
+        lock: !locked,
+      });
+      setLocked(res.data.locked);
+      toast.success(locked ? "Image unlocked" : "Image locked");
+    } catch {
+      toast.error("Failed to toggle lock.");
     }
   };
 
@@ -92,7 +111,9 @@ export default function ImageCard({
             src={image.url}
             alt={image.title}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className={`object-cover transition-transform duration-300 group-hover:scale-105 ${
+              locked && !isOwner ? "blur-sm" : ""
+            }`}
             sizes="(max-width: 768px) 100vw, 33vw"
           />
         </div>
@@ -133,6 +154,25 @@ export default function ImageCard({
               />
               {likes}
             </button>
+            {isOwner && (
+              <button
+                onClick={handleToggleLock}
+                className="flex items-center gap-1 text-sm hover:text-purple-600"
+              >
+                {locked ? (
+                  <>
+                    <Unlock className="w-4 h-4" />
+                    Unlock
+                  </>
+                ) : (
+                  <>
+                    <Lock className="w-4 h-4" />
+                    Lock
+                  </>
+                )}
+              </button>
+            )}
+
             <button
               onClick={() => setShowCommentBox((prev) => !prev)}
               className="flex items-center gap-1 hover:text-blue-500"
