@@ -7,7 +7,6 @@ import {
   User2,
   Heart,
   MessageCircle,
-  Share2,
 } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
@@ -142,9 +141,6 @@ export default function ImageCard({
               {image.comments || 0}
             </button>
           </div>
-          <button className="hover:text-green-500">
-            <Share2 className="w-4 h-4" />
-          </button>
         </div>
 
         {showCommentBox && (

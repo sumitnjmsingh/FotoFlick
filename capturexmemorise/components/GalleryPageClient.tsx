@@ -6,7 +6,7 @@ import ImageCard from "./ImageCard";
 import { GalleryFilter } from "./GalleryFilter";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
-import { X, Share2 } from "lucide-react";
+import { X, Share2, LoaderCircle, CalendarDays } from "lucide-react";
 
 const categories = ["All", "Nature", "Travel", "Food", "Animals", "Tech"];
 
@@ -74,7 +74,9 @@ export default function GalleryPageClient() {
         </div>
 
         {loading ? (
-          <div className="text-center text-gray-500 py-20">Loading...</div>
+          <div className="flex flex-col items-center justify-center text-gray-500 py-20 space-y-4">
+            <LoaderCircle className="w-8 h-8 animate-spin text-indigo-600" />
+          </div>
         ) : images.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {images.map((img) => (
@@ -99,13 +101,6 @@ export default function GalleryPageClient() {
       {selectedImage && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-center items-center px-4">
           <div className="relative bg-white rounded-xl p-4 max-w-3xl w-full shadow-lg">
-            <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute bottom-14 right-4 text-gray-600 hover:text-red-500"
-            >
-              <X className="w-6 h-6 hover:cursor-pointer" />
-            </button>
-
             <div className="relative w-full h-[400px] mb-4 rounded-md overflow-hidden">
               <Image
                 src={selectedImage.url}
@@ -114,6 +109,12 @@ export default function GalleryPageClient() {
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 60vw"
               />
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute top-4 right-4 text-white hover:text-red-500"
+              >
+                <X className="w-6 h-6 hover:cursor-pointer" />
+              </button>
               <a
                 href={selectedImage.url.replace(
                   "/upload/",
@@ -139,7 +140,7 @@ export default function GalleryPageClient() {
                     })
                     .catch((err) => console.error("Share failed:", err))
                 }
-                className="absolute bottom-4 right-4 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded-lg shadow-md transition flex items-center gap-1"
+                className="absolute bottom-4 right-4 bg-gray-200 hover:bg-gray-300 text-gray-800 hover:cursor-pointer px-4 py-2 text-sm rounded-lg shadow-md transition flex items-center gap-1"
               >
                 <Share2 className="w-4 h-4" />
                 Share
@@ -153,7 +154,8 @@ export default function GalleryPageClient() {
               <p className="text-sm text-gray-600">
                 By {selectedImage.username}
               </p>
-              <p className="text-xs text-gray-500 mb-2">
+              <p className="text-xs text-gray-500 mb-2 flex items-center gap-1">
+                <CalendarDays className="w-4 h-4 text-gray-400" />
                 {new Date(selectedImage.createdAt).toLocaleString()}
               </p>
             </div>

@@ -43,7 +43,7 @@ export default function Navbar() {
             <UserButton afterSignOutUrl="/" />
           ) : (
             <SignInButton>
-              <button className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-indigo-700 transition">
+              <button className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-indigo-700 hover:cursor-pointer transition">
                 Sign In
               </button>
             </SignInButton>
