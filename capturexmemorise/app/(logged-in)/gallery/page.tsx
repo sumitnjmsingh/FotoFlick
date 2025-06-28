@@ -1,20 +1,14 @@
-import { db } from "@/lib/db";
-import GalleryPageClient from "@/components/GalleryPageClient";
+"use client";
+
 import { Suspense } from "react";
+import GalleryPageClient from "@/components/GalleryPageClient";
 
-export default async function GalleryPage() {
-  const images = await db.image.findMany({
-    include: {
-      likes: true,
-      comments: true,
-    },
-  });
-
+export default function GalleryPage() {
   return (
     <Suspense
       fallback={<div className="p-10 text-center">Loading gallery...</div>}
     >
-      <GalleryPageClient images={images} />
+      <GalleryPageClient />
     </Suspense>
   );
 }

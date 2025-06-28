@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ImageCard from "./ImageCard";
 import { GalleryFilter } from "./GalleryFilter";
@@ -21,36 +21,40 @@ interface ImageWithMeta {
   comments: { id: string; content: string }[];
 }
 
-export default function GalleryPageClient({
-  images,
-}: {
-  images: ImageWithMeta[];
-}) {
+export default function GalleryPageClient() {
   const searchParams = useSearchParams();
   const selectedCategory = searchParams.get("category") || "All";
   const sortOrder = searchParams.get("sort") === "oldest" ? "asc" : "desc";
 
+  const [images, setImages] = useState<ImageWithMeta[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<ImageWithMeta | null>(
     null
   );
 
-  const filteredImages = useMemo(() => {
-    let result = [...images];
+  useEffect(() => {
+    const fetchImages = async () => {
+      setLoading(true);
+      const query = new URLSearchParams({
+        category: selectedCategory,
+        sort: sortOrder === "asc" ? "oldest" : "latest",
+      });
 
-    if (selectedCategory !== "All") {
-      result = result.filter(
-        (img) => img.category?.toLowerCase() === selectedCategory.toLowerCase()
-      );
-    }
+      try {
+        const res = await fetch(`/api/images?${query.toString()}`, {
+          cache: "no-store",
+        });
+        const data = await res.json();
+        setImages(data.images);
+      } catch (error) {
+        console.error("Failed to fetch images:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    result.sort((a, b) => {
-      const dateA = new Date(a.createdAt).getTime();
-      const dateB = new Date(b.createdAt).getTime();
-      return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
-    });
-
-    return result;
-  }, [images, selectedCategory, sortOrder]);
+    fetchImages();
+  }, [selectedCategory, sortOrder]);
 
   return (
     <div className="bg-white min-h-screen">
@@ -63,15 +67,17 @@ export default function GalleryPageClient({
             defaultSort={sortOrder === "asc" ? "oldest" : "latest"}
           />
           <p className="text-sm text-gray-600">
-            Showing <strong>{filteredImages.length}</strong> image
-            {filteredImages.length !== 1 && "s"}
+            Showing <strong>{images.length}</strong> image
+            {images.length !== 1 && "s"}
             {selectedCategory !== "All" && ` in “${selectedCategory}”`}
           </p>
         </div>
 
-        {filteredImages.length > 0 ? (
+        {loading ? (
+          <div className="text-center text-gray-500 py-20">Loading...</div>
+        ) : images.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredImages.map((img) => (
+            {images.map((img) => (
               <ImageCard
                 key={img.id}
                 image={{
@@ -90,7 +96,6 @@ export default function GalleryPageClient({
         )}
       </div>
 
-      {/* Modal */}
       {selectedImage && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-center items-center px-4">
           <div className="relative bg-white rounded-xl p-4 max-w-3xl w-full shadow-lg">
@@ -100,6 +105,7 @@ export default function GalleryPageClient({
             >
               <X className="w-6 h-6 hover:cursor-pointer" />
             </button>
+
             <div className="relative w-full h-[400px] mb-4 rounded-md overflow-hidden">
               <Image
                 src={selectedImage.url}
@@ -139,6 +145,7 @@ export default function GalleryPageClient({
                 Share
               </button>
             </div>
+
             <div className="mb-4">
               <h2 className="text-2xl font-bold text-black mb-1">
                 {selectedImage.title}
