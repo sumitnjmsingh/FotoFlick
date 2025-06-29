@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Loader2 } from "lucide-react";
 
 export default function Navbar() {
   const { isSignedIn } = useUser();
   const [isOpen, setIsOpen] = useState(false);
+  const [signInLoading, setSignInLoading] = useState(false);
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -15,6 +16,10 @@ export default function Navbar() {
     { href: "/upload", label: "Upload" },
     { href: "/about", label: "About" },
   ];
+
+  const handleSignInClick = () => {
+    setSignInLoading(true);
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-md shadow-sm border-b">
@@ -43,8 +48,19 @@ export default function Navbar() {
             <UserButton afterSignOutUrl="/" />
           ) : (
             <SignInButton>
-              <button className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-indigo-700 hover:cursor-pointer transition">
-                Sign In
+              <button
+                onClick={handleSignInClick}
+                disabled={signInLoading}
+                className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:cursor-pointer font-semibold hover:bg-indigo-700 transition flex items-center gap-2 disabled:opacity-50"
+              >
+                {signInLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Signing In...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
               </button>
             </SignInButton>
           )}
@@ -56,7 +72,11 @@ export default function Navbar() {
             className="text-gray-700 focus:outline-none"
             aria-label="Toggle Menu"
           >
-            {isOpen ? <X className="w-6 h-6 hover:cursor-pointer"/> : <Menu className="w-6 h-6 hover:cursor-pointer" />}
+            {isOpen ? (
+              <X className="w-6 h-6 hover:cursor-pointer" />
+            ) : (
+              <Menu className="w-6 h-6 hover:cursor-pointer" />
+            )}
           </button>
         </div>
       </div>
@@ -80,8 +100,19 @@ export default function Navbar() {
             </div>
           ) : (
             <SignInButton>
-              <button className="w-full bg-indigo-600 text-white py-2 rounded-md font-semibold hover:bg-indigo-700 transition">
-                Sign In
+              <button
+                onClick={handleSignInClick}
+                disabled={signInLoading}
+                className="w-full bg-indigo-600 text-white py-2 rounded-md font-semibold hover:cursor-pointer hover:bg-indigo-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {signInLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Signing In...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
               </button>
             </SignInButton>
           )}

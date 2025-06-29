@@ -1,16 +1,40 @@
 "use client";
 
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import { useUser } from "@clerk/nextjs";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   UploadCloud,
   Image as ImageIcon,
   Heart,
   MessageCircle,
+  Loader2,
 } from "lucide-react";
 
 export default function LandingPage() {
+  const { isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
+  const [loadingUpload, setLoadingUpload] = useState(false);
+  const [loadingExplore, setLoadingExplore] = useState(false);
+
+  const handleUploadClick = () => {
+    setLoadingUpload(true);
+    if (!isLoaded) return;
+
+    if (isSignedIn) {
+      router.push("/upload");
+    } else {
+      router.push("/sign-in");
+    }
+  };
+
+  const handleExploreClick = () => {
+    setLoadingExplore(true);
+    router.push("/gallery");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
       <Navbar />
@@ -23,12 +47,22 @@ export default function LandingPage() {
           A creative platform to upload, discover, and engage with beautiful
           moments captured by our community.
         </p>
-        <Link
-          href="/upload"
-          className="mt-6 inline-flex items-center gap-2 bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition"
+        <button
+          onClick={handleUploadClick}
+          disabled={loadingUpload}
+          className="mt-6 inline-flex items-center gap-2 bg-indigo-600 text-white hover:cursor-pointer py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-60"
         >
-          Upload Your Memory <UploadCloud className="w-5 h-5" />
-        </Link>
+          {loadingUpload ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Redirecting...
+            </>
+          ) : (
+            <>
+              Upload Your Memory <UploadCloud className="w-5 h-5" />
+            </>
+          )}
+        </button>
       </section>
 
       <section className="py-20 px-6 max-w-6xl mx-auto grid gap-16 sm:grid-cols-3 text-center">
@@ -71,12 +105,22 @@ export default function LandingPage() {
         <p className="mt-3 text-gray-600 text-lg">
           Join our growing community today.
         </p>
-        <Link
-          href="/gallery"
-          className="mt-6 inline-flex items-center gap-2 bg-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-pink-600 transition"
+        <button
+          onClick={handleExploreClick}
+          disabled={loadingExplore}
+          className="mt-6 inline-flex items-center gap-2 bg-pink-500 text-white hover:cursor-pointer py-3 px-6 rounded-lg font-semibold hover:bg-pink-600 transition disabled:opacity-60"
         >
-          Explore Gallery <ArrowRight className="w-5 h-5" />
-        </Link>
+          {loadingExplore ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Loading...
+            </>
+          ) : (
+            <>
+              Explore Gallery <ArrowRight className="w-5 h-5" />
+            </>
+          )}
+        </button>
       </section>
 
       <footer className="py-6 text-center text-sm text-gray-400">
