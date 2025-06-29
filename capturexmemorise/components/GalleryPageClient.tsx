@@ -7,9 +7,18 @@ import ImageCard from "./ImageCard";
 import { GalleryFilter } from "./GalleryFilter";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
+import Link from "next/link";
 import { X, Share2, LoaderCircle, CalendarDays } from "lucide-react";
 
-const categories = ["All", "Nature", "Travel", "Food", "Animals", "Tech", "General"];
+const categories = [
+  "All",
+  "Nature",
+  "Travel",
+  "Food",
+  "Animals",
+  "Tech",
+  "General",
+];
 
 interface ImageWithMeta {
   id: string;
@@ -131,36 +140,44 @@ export default function GalleryPageClient() {
               >
                 <X className="w-6 h-6 hover:cursor-pointer" />
               </button>
-              <a
-                href={selectedImage.url.replace(
-                  "/upload/",
-                  `/upload/fl_attachment:${selectedImage.title.replace(
-                    /\s+/g,
-                    "_"
-                  )}/`
-                )}
-                download
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute bottom-4 left-4 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 text-sm rounded-lg shadow-md transition"
-              >
-                Download
-              </a>
-              <button
-                onClick={() =>
-                  navigator
-                    .share?.({
-                      title: selectedImage.title,
-                      text: `Check out this image: ${selectedImage.title}`,
-                      url: selectedImage.url,
-                    })
-                    .catch((err) => console.error("Share failed:", err))
-                }
-                className="absolute bottom-4 right-4 bg-gray-200 hover:bg-gray-300 text-gray-800 hover:cursor-pointer px-4 py-2 text-sm rounded-lg shadow-md transition flex items-center gap-1"
-              >
-                <Share2 className="w-4 h-4" />
-                Share
-              </button>
+              {((selectedImage.locked &&
+                selectedImage.userId === currentUserId) ||
+                !selectedImage.locked) && (
+                <Link
+                  href={selectedImage.url.replace(
+                    "/upload/",
+                    `/upload/fl_attachment:${selectedImage.title.replace(
+                      /\s+/g,
+                      "_"
+                    )}/`
+                  )}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute bottom-4 left-4 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 text-sm rounded-lg shadow-md transition"
+                >
+                  Download
+                </Link>
+              )}
+              {((selectedImage.locked &&
+                selectedImage.userId === currentUserId) ||
+                !selectedImage.locked) && (
+                <button
+                  onClick={() =>
+                    navigator
+                      .share?.({
+                        title: selectedImage.title,
+                        text: `Check out this image: ${selectedImage.title}`,
+                        url: selectedImage.url,
+                      })
+                      .catch((err) => console.error("Share failed:", err))
+                  }
+                  className="absolute bottom-4 right-4 bg-gray-200 hover:bg-gray-300 text-gray-800 hover:cursor-pointer px-4 py-2 text-sm rounded-lg shadow-md transition flex items-center gap-1"
+                >
+                  <Share2 className="w-4 h-4" />
+                  Share
+                </button>
+              )}
             </div>
 
             <div className="mb-4">

@@ -116,6 +116,11 @@ export default function ImageCard({
             }`}
             sizes="(max-width: 768px) 100vw, 33vw"
           />
+          {locked && !isOwner && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-lg font-semibold">
+              🔒 Locked Image
+            </div>
+          )}
         </div>
       </div>
 
