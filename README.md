@@ -6,7 +6,7 @@ FotoFlick is a full-stack image-sharing web application where users can upload, 
 
 ## 🎨 Live Preview
 
-🚀 [Live Site (Vercel)](https://your-fotoflick.vercel.app)
+🚀 [Live Site (Vercel)](https://foto-flick.vercel.app)
 
 ---
 
