@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
+import { Github, Linkedin, Mail } from "lucide-react";
+import Link from "next/link";
 
 export default function AboutPage() {
   return (
@@ -91,13 +93,42 @@ export default function AboutPage() {
               priority
             />
           </div>
-          <div>
-            <h3 className="text-xl font-semibold">Sumit Singh</h3>
-            <p className="text-gray-600">
-              A passionate full-stack developer and B.Tech CSE student at IIT
-              Mandi. Sumit is dedicated to building high-quality, user-friendly
-              applications using modern web technologies.
-            </p>
+          <div className="space-y-4 text-center sm:text-left">
+            <div>
+              <h3 className="text-xl font-semibold">Sumit Singh</h3>
+              <p className="text-gray-600">
+                A passionate full-stack developer and B.Tech CSE student at IIT
+                Mandi. Sumit is dedicated to building high-quality,
+                user-friendly applications using modern web technologies.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-center sm:justify-start gap-4 mt-4">
+              <Link
+                href="https://github.com/sumitnjmsingh"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-black transition"
+              >
+                <Github className="w-5 h-5" />
+              </Link>
+
+              <Link
+                href="https://www.linkedin.com/in/sumit-pratap-singh-5009431aa?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-700 hover:text-blue-900 transition"
+              >
+                <Linkedin className="w-5 h-5" />
+              </Link>
+
+              <Link
+                href="mailto:sumitjfsingh1111@gmail.com"
+                className="text-red-500 hover:text-red-700 transition"
+              >
+                <Mail className="w-5 h-5" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
