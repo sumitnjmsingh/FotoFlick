@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { UploadCloud, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
-const categories = ["All", "Nature", "Travel", "Food", "Animals", "Tech"];
+const categories = ["All", "Nature", "Travel", "Food", "Animals", "Tech", "General"];
 
 export default function UploadPage() {
   const { user } = useUser();
@@ -78,7 +78,7 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-white min-h-screen">
       <Navbar />
       <div className="min-h-screen bg-white flex items-center justify-center px-4 py-10">
         <div className="bg-white/80 backdrop-blur-sm shadow-2xl rounded-3xl p-10 w-full max-w-2xl border border-blue-200">
