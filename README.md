@@ -54,7 +54,7 @@ FotoFlick is a full-stack image-sharing web application where users can upload, 
 
 ```bash
 git clone https://github.com/sumitnjmsingh/fotoflick.git
-cd fotoflick
+cd capturexmemorise
 ```
 
 ### 2. Install Dependencies
